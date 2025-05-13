@@ -1,0 +1,30 @@
+#interval = 30
+
+## Set the mapping of extra tags in batches
+[mappings]
+#"https://10.173.21.101" = { "vcenter" = "172.24.98.200","horizonName" = "xi.an-HORIZON" }
+
+[[instances]]
+#targets = [
+#    "https://10.173.21.101"
+#]
+
+## append some labels for series
+#labels = { "vcenter" = "172.24.98.200","horizonName" = "xi.an-HORIZON"  }
+
+## interval = global.interval * interval_times
+# interval_times = 1
+
+## Set response_timeout (default 5 seconds)
+response_timeout = "30s"
+
+## Optional HTTP Basic Auth Credentials
+username = "xamp"
+password = "Iop[]=-09*"
+domain = "vdi.mp.com"
+
+#[kafka]
+#brokers = ["cdp01:9092", "cdp02:9092", "cdp03:9092"]
+#topic = "engine_source_topic"
+#required_acks = 1
+#timeout = "10s"
