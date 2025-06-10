@@ -75,7 +75,7 @@ func (kp *KafkaProducer) Influxdb2Kafka(input []byte, currentTimestamp int64) er
 			"ts":        currentTimestamp, // 时间戳
 		}
 		// 发送到Kafka
-		if err := kp.SendMapToKafka(data); err != nil {
+		if err := kp.SendToKafka(data); err != nil {
 			return fmt.Errorf("failed to send data to Kafka: %v", err)
 		}
 	}
@@ -121,7 +121,7 @@ func nextMetric(decoder *lineprotocol.Decoder) (types.Metric, error) {
 }
 
 // SendMapToKafka 发送map数据到Kafka (优化后的统一发送方法)
-func (kp *KafkaProducer) SendMapToKafka(data map[string]interface{}) error {
+func (kp *KafkaProducer) SendToKafka(data interface{}) error {
 	// 将数据转换为JSON
 	jsonData, err := json.Marshal(data)
 	if err != nil {
@@ -157,7 +157,7 @@ func (kp *KafkaProducer) SendMessage(fields map[string]interface{}, mappingLabel
 	}
 	data["apiClock"] = currentTimestamp // 添加时间戳
 
-	return kp.SendMapToKafka(data) // 使用统一的发送方法
+	return kp.SendToKafka(data) // 使用统一的发送方法
 }
 
 // Close 关闭Kafka生产者

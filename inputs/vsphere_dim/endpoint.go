@@ -184,8 +184,25 @@ func (ep *Endpoint) processResults(results *CollectionResults, slist *types.Samp
 					for k, v := range ins.Labels {
 						labels[k] = v
 					}
-					//发送数据
-					slist.PushSample(inputName, "vm_info", 1, labels)
+					//发送数据到夜莺
+					//slist.PushSample(inputName, "vm_info", 1, labels)
+
+					// vm电源指标写入时序数据库
+					powerLabels := map[string]string{
+						"vdi":         vm.Name,
+						"vcHostName":  host.Name,
+						"clusterName": cluster.Name,
+						"datacenter":  dc.Name,
+						"itemName":    inputName + "_vm_power_state",
+					}
+					powerStateValue := 0 // 默认值
+					if vm.PowerState == "poweredOn" {
+						powerStateValue = 1
+					}
+					slist.PushSample(inputName, "vm_power_state", powerStateValue, powerLabels)
+
+					// 发送数据到kafka
+					ins.KafkaProducer.SendToKafka(labels)
 				}
 			}
 		}
